@@ -2,6 +2,20 @@
 
 `no-cap` is a set of AutoHotkey scripts that turns Caps Lock into a modifier layer so you can map extra keyboard functions to easy key combos.
 
+## V1 mapping:
+
+| Shortcut | Action |
+|---|---|
+| `Caps + J/I/K/L` | Left / Up / Down / Right |
+| `Caps + V + J/I/K/L` | Word-style Left / Up / Down / Right (`Option` + Arrow) |
+| `Caps + Backspace` | Delete previous word (`Option` + Delete) |
+| `Caps + S/E/D/F` | Move mouse Left / Up / Down / Right while held |
+| `Caps + Space` | Left click |
+| `Caps` | Does not activate Caps Lock |
+
+> macOS uses `Option + Arrow` / `Option + Delete` for the usual word-navigation/deletion behavior, so these replace the Windows `Ctrl` shortcuts from the AHK script.
+
+
 ## Requirements
 Windows:
 - Install [AutoHotkey v2](https://www.autohotkey.com/).
