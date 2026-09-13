@@ -1,5 +1,7 @@
 # no-cap
 
+<!-- Please use the repository's Issues to report bugs or suggest new mappings. -->
+
 `no-cap` is a set of AutoHotkey scripts that turns Caps Lock into a modifier layer so you can map extra keyboard functions to easy key combos.
 
 ## V1 mapping:
@@ -36,6 +38,6 @@ Mac:
   <img alt="Download no-cap-v1.ahk" src="https://img.shields.io/badge/Download-no--cap--v1.ahk-blue?style=for-the-badge">
 </a>
 
-<a href="https://github.com/demonking-mw/no-cap/raw/refs/heads/main/mac-instructions/no-cap-v1-mac-instruction.md?raw=1">
-  <img alt="Download Mac version instructions" src="https://img.shields.io/badge/Download-Mac%20Version-green?style=for-the-badge">
+<a href="https://github.com/demonking-mw/no-cap/raw/refs/heads/main/mac-instructions/no-cap-v1-mac-instruction.html?raw=1">
+  <img alt="Mac setup instruction" src="https://img.shields.io/badge/Mac%20Setup%20Instruction-green?style=for-the-badge">
 </a>
