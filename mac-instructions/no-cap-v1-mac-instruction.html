@@ -1,0 +1,473 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Caps Lock Control Layer on macOS</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f7f9;--panel:#fff;--text:#17181a;--muted:#646a73;--border:#d9dde3;--accent:#0a66ff;--code:#101216}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.55}.wrap{max-width:980px;margin:auto;padding:28px 20px 80px}h1{font-size:2rem;margin:0 0 8px}h2{font-size:1.35rem;margin:0}.lead{color:var(--muted);margin-top:0}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin:18px 0}.result table{width:100%;border-collapse:collapse}.result th,.result td{text-align:left;padding:10px;border-bottom:1px solid var(--border)}.result th{font-weight:650}.brief{display:grid;gap:8px}.brief a{display:flex;justify-content:space-between;gap:18px;align-items:center;text-decoration:none;color:inherit;border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--panel)}.brief a:hover{border-color:var(--accent)}.brief small{color:var(--muted)}details.section{background:var(--panel);border:1px solid var(--border);border-radius:14px;margin:14px 0;scroll-margin-top:20px}details.section>summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700;font-size:1.05rem}details.section>summary::-webkit-details-marker{display:none}details.section[open]>summary{border-bottom:1px solid var(--border)}.section-body{padding:4px 18px 18px}.section-body a{color:var(--accent)}code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:.92em;background:#eef1f5;padding:2px 5px;border-radius:5px}.code-details{margin:12px 0}.code-details summary{cursor:pointer;font-weight:600}.code-wrap{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px}.code-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#1a1d22;color:#d8dce3;font-size:.82rem}.copy-btn,.download-btn,.top-btn{border:0;border-radius:8px;padding:8px 11px;cursor:pointer;font-weight:650}.copy-btn{background:#fff;color:#111}.download-btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;margin:8px 0}.code-wrap pre{margin:0;padding:14px;overflow:auto;background:var(--code);color:#e8eaf0;max-height:520px}blockquote{margin:14px 0;padding:10px 14px;border-left:4px solid var(--accent);background:#eef4ff;border-radius:6px}.table-scroll{overflow:auto}ul,ol{padding-left:24px}.top-btn{position:fixed;right:20px;bottom:20px;background:var(--accent);color:#fff;box-shadow:0 6px 20px #0002;z-index:10}.top-btn[hidden]{display:none}.note{color:var(--muted);font-size:.92rem}.divider{height:1px;background:var(--border);margin:26px 0}@media(prefers-color-scheme:dark){:root{--bg:#0e1013;--panel:#171a1f;--text:#eef0f3;--muted:#a8afb9;--border:#303640}.result th,.result td{border-color:var(--border)}code{background:#252a31}blockquote{background:#172235}}
+</style></head><body id="top"><div class="wrap">
+<h1>Caps Lock Control Layer on macOS</h1><p class="lead">Replicate the supplied AutoHotkey layer using Karabiner-Elements.</p>
+<section class="panel result"><h2>Result</h2><div class="table-scroll"><table><thead><tr><th>Shortcut</th><th>Action</th></tr></thead><tbody><tr><td><code>Caps + J/I/K/L</code></td><td>Left / Up / Down / Right</td></tr><tr><td><code>Caps + V + J/I/K/L</code></td><td>Word-style Left / Up / Down / Right (<code>Option</code> + Arrow)</td></tr><tr><td><code>Caps + Backspace</code></td><td>Delete previous word (<code>Option</code> + Delete)</td></tr><tr><td><code>Caps + S/E/D/F</code></td><td>Move mouse Left / Up / Down / Right while held</td></tr><tr><td><code>Caps + Space</code></td><td>Left click</td></tr><tr><td><code>Caps</code></td><td>Does not activate Caps Lock</td></tr></tbody></table></div>
+<blockquote>macOS uses <code>Option + Arrow</code> / <code>Option + Delete</code> for the usual word-navigation/deletion behavior, so these replace the Windows <code>Ctrl</code> shortcuts from the AHK script.</blockquote></section><section class="panel"><h2>Super-simple setup</h2><div class="brief"><a href="#sec-1-install-karabiner-elements"><span>1. Install Karabiner-Elements</span><small>Install Karabiner-Elements and approve its macOS permissions.</small></a><a href="#sec-2-add-the-rule"><span>2. Add the rule</span><small>Paste the supplied rule, save it, and enable “Caps Lock Control Layer.” Download the JSON if you prefer a file.</small></a><a href="#sec-3-test"><span>3. Test</span><small>Open TextEdit and test the Caps-layer keyboard, word navigation, click, and mouse movement.</small></a><a href="#sec-4-adjust-mouse-speed"><span>4. Adjust mouse speed</span><small>Change the mouse movement value from 5 to tune speed, then re-save the rule.</small></a><a href="#sec-5-troubleshooting"><span>5. Troubleshooting</span><small>Check the rule and permissions first; use EventViewer to confirm key detection.</small></a><a href="#sec-6-startup"><span>6. Startup</span><small>Allow Karabiner services in Login Items so the layer is available after login.</small></a><a href="#sec-mac-version-of-the-layout"><span>Mac version of the layout</span><small>Use the compact layout reference at the end when you need to remember the bindings.</small></a></div></section><p><button class="download-btn" id="downloadJson">Download Karabiner JSON</button></p><details class="section" id="sec-1-install-karabiner-elements"><summary>1. Install Karabiner-Elements</summary><div class="section-body"><ol><li>Download <strong>Karabiner-Elements</strong> from <a href="https://karabiner-elements.pqrs.org/" target="_blank" rel="noopener">https://karabiner-elements.pqrs.org/</a></li><li>Open the <code>.dmg</code>, run the installer, and finish setup.</li><li>Launch <strong>Karabiner-Elements</strong>.</li><li>When macOS asks for permissions, allow the Karabiner components in <strong>System Settings → Privacy &amp; Security</strong>. Also allow <strong>Accessibility</strong> and <strong>Input Monitoring</strong> access when prompted.</li><li>Restart Karabiner-Elements if it asks you to.</li></ol>
+<p>You do not need AutoHotkey, Homebrew, Python, or another scripting runtime.</p></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-2-add-the-rule"><summary>2. Add the rule</summary><div class="section-body"><p>Open <strong>Karabiner-Elements → Complex Modifications → Add your own rule</strong>.</p>
+<p>Delete the example rule and paste this entire JSON:</p>
+<details class="code-details"><summary>Show code</summary>
+<div class="code-wrap"><div class="code-head"><span>json</span><button class="copy-btn" data-copy-id="code-sec-2-add-the-rule">Copy</button></div><pre><code id="code-sec-2-add-the-rule">{
+  &quot;title&quot;: &quot;Caps Lock Control Layer&quot;,
+  &quot;rules&quot;: [
+    {
+      &quot;description&quot;: &quot;Caps Lock Control Layer - arrows, word movement, mouse movement and click&quot;,
+      &quot;manipulators&quot;: [
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;caps_lock&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;to&quot;: [
+            {
+              &quot;set_variable&quot;: {
+                &quot;name&quot;: &quot;caps_layer&quot;,
+                &quot;value&quot;: 1
+              }
+            },
+            {
+              &quot;key_code&quot;: &quot;vk_none&quot;
+            }
+          ],
+          &quot;to_after_key_up&quot;: [
+            {
+              &quot;set_variable&quot;: {
+                &quot;name&quot;: &quot;caps_layer&quot;,
+                &quot;value&quot;: 0
+              }
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;v&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;set_variable&quot;: {
+                &quot;name&quot;: &quot;caps_v&quot;,
+                &quot;value&quot;: 1
+              }
+            },
+            {
+              &quot;key_code&quot;: &quot;vk_none&quot;
+            }
+          ],
+          &quot;to_after_key_up&quot;: [
+            {
+              &quot;set_variable&quot;: {
+                &quot;name&quot;: &quot;caps_v&quot;,
+                &quot;value&quot;: 0
+              }
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;j&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;left_arrow&quot;,
+              &quot;modifiers&quot;: [&quot;left_option&quot;]
+            }
+          ]
+        },
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;j&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_unless&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;left_arrow&quot;
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;i&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;up_arrow&quot;,
+              &quot;modifiers&quot;: [&quot;left_option&quot;]
+            }
+          ]
+        },
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;i&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_unless&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;up_arrow&quot;
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;k&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;down_arrow&quot;,
+              &quot;modifiers&quot;: [&quot;left_option&quot;]
+            }
+          ]
+        },
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;k&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_unless&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;down_arrow&quot;
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;l&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;right_arrow&quot;,
+              &quot;modifiers&quot;: [&quot;left_option&quot;]
+            }
+          ]
+        },
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;l&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            },
+            {
+              &quot;type&quot;: &quot;variable_unless&quot;,
+              &quot;name&quot;: &quot;caps_v&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;right_arrow&quot;
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;delete_or_backspace&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;key_code&quot;: &quot;delete_or_backspace&quot;,
+              &quot;modifiers&quot;: [&quot;left_option&quot;]
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;spacebar&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;pointing_button&quot;: &quot;button1&quot;
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;s&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;mouse_key&quot;: {
+                &quot;x&quot;: -5
+              }
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;e&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;mouse_key&quot;: {
+                &quot;y&quot;: -5
+              }
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;d&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;mouse_key&quot;: {
+                &quot;y&quot;: 5
+              }
+            }
+          ]
+        },
+
+        {
+          &quot;type&quot;: &quot;basic&quot;,
+          &quot;from&quot;: {
+            &quot;key_code&quot;: &quot;f&quot;,
+            &quot;modifiers&quot;: {
+              &quot;optional&quot;: [&quot;any&quot;]
+            }
+          },
+          &quot;conditions&quot;: [
+            {
+              &quot;type&quot;: &quot;variable_if&quot;,
+              &quot;name&quot;: &quot;caps_layer&quot;,
+              &quot;value&quot;: 1
+            }
+          ],
+          &quot;to&quot;: [
+            {
+              &quot;mouse_key&quot;: {
+                &quot;x&quot;: 5
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}</code></pre></div></details>
+<p>Save it, then enable <strong>Caps Lock Control Layer</strong> under Complex Modifications.</p></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-3-test"><summary>3. Test</summary><div class="section-body"><p>Open TextEdit and verify:</p>
+<ul><li><code>Caps + J/I/K/L</code> moves the cursor.</li><li><code>Caps + V + J/L</code> moves by word.</li><li><code>Caps + Backspace</code> deletes the previous word.</li><li><code>Caps + Space</code> clicks.</li><li>Hold <code>Caps + S/E/D/F</code> to move the mouse.</li><li>Press Caps by itself: normal Caps Lock must <strong>not</strong> turn on.</li><li>Press <code>V</code> normally without Caps: it must still type <code>v</code>.</li></ul></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-4-adjust-mouse-speed"><summary>4. Adjust mouse speed</summary><div class="section-body"><p>In the JSON, find the mouse movement values such as:</p>
+<details class="code-details"><summary>Show code</summary>
+<div class="code-wrap"><div class="code-head"><span>json</span><button class="copy-btn" data-copy-id="code-sec-4-adjust-mouse-speed">Copy</button></div><pre><code id="code-sec-4-adjust-mouse-speed">&quot;x&quot;: 5</code></pre></div></details>
+<p>and</p>
+<details class="code-details"><summary>Show code</summary>
+<div class="code-wrap"><div class="code-head"><span>json</span><button class="copy-btn" data-copy-id="code-sec-4-adjust-mouse-speed">Copy</button></div><pre><code id="code-sec-4-adjust-mouse-speed">&quot;y&quot;: 5</code></pre></div></details>
+<p>Increase <code>5</code> for faster movement or decrease it for slower movement. Re-save the rule afterward.</p></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-5-troubleshooting"><summary>5. Troubleshooting</summary><div class="section-body"><p><strong>Caps Lock still toggles:</strong> check Karabiner's <strong>Complex Modifications</strong> rule is enabled and that Karabiner has Accessibility/Input Monitoring permissions.</p>
+<p><strong>Nothing works:</strong> open <strong>Karabiner-Elements → EventViewer</strong> and confirm the physical keys are being detected.</p>
+<p><strong>V stops typing normally:</strong> make sure <code>caps_v</code> is only being set when <code>caps_layer</code> is active; use the JSON above unchanged.</p></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-6-startup"><summary>6. Startup</summary><div class="section-body"><p>Karabiner-Elements runs in the background and can start automatically at login. Check <strong>System Settings → General → Login Items</strong> and ensure the Karabiner services are allowed.</p></div></details><p><a href="#top" class="note">↑ Back to top</a></p><details class="section" id="sec-mac-version-of-the-layout"><summary>Mac version of the layout</summary><div class="section-body"><details class="code-details"><summary>Show code</summary>
+<div class="code-wrap"><div class="code-head"><span>text</span><button class="copy-btn" data-copy-id="code-sec-mac-version-of-the-layout">Copy</button></div><pre><code id="code-sec-mac-version-of-the-layout">CAPS = layer
+
+Caps + J = ←       Caps + I = ↑
+Caps + K = ↓       Caps + L = →
+
+Caps + V + J = word ←
+Caps + V + I = word ↑
+Caps + V + K = word ↓
+Caps + V + L = word →
+
+Caps + Backspace = delete previous word
+Caps + Space     = left click
+
+Caps + S = mouse ←
+Caps + E = mouse ↑
+Caps + D = mouse ↓
+Caps + F = mouse →</code></pre></div></details>
+<p>Official documentation: <a href="https://karabiner-elements.pqrs.org/docs/" target="_blank" rel="noopener">https://karabiner-elements.pqrs.org/docs/</a></p></div></details><p><a href="#top" class="note">↑ Back to top</a></p></div><button id="backTop" class="top-btn" hidden>↑ Back to top</button><script>
+document.querySelectorAll('.copy-btn').forEach(btn=>btn.addEventListener('click',async()=>{const el=document.getElementById(btn.dataset.copyId);try{await navigator.clipboard.writeText(el.textContent);btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1200)}catch(e){btn.textContent='Copy failed';setTimeout(()=>btn.textContent='Copy',1200)}}));
+const top=document.getElementById('backTop');window.addEventListener('scroll',()=>{top.hidden=scrollY<500});top.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+const karabinerJson="{\n  \"title\": \"Caps Lock Control Layer\",\n  \"rules\": [\n    {\n      \"description\": \"Caps Lock Control Layer - arrows, word movement, mouse movement and click\",\n      \"manipulators\": [\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"caps_lock\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"to\": [\n            {\n              \"set_variable\": {\n                \"name\": \"caps_layer\",\n                \"value\": 1\n              }\n            },\n            {\n              \"key_code\": \"vk_none\"\n            }\n          ],\n          \"to_after_key_up\": [\n            {\n              \"set_variable\": {\n                \"name\": \"caps_layer\",\n                \"value\": 0\n              }\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"v\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"set_variable\": {\n                \"name\": \"caps_v\",\n                \"value\": 1\n              }\n            },\n            {\n              \"key_code\": \"vk_none\"\n            }\n          ],\n          \"to_after_key_up\": [\n            {\n              \"set_variable\": {\n                \"name\": \"caps_v\",\n                \"value\": 0\n              }\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"j\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"left_arrow\",\n              \"modifiers\": [\"left_option\"]\n            }\n          ]\n        },\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"j\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_unless\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"left_arrow\"\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"i\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"up_arrow\",\n              \"modifiers\": [\"left_option\"]\n            }\n          ]\n        },\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"i\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_unless\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"up_arrow\"\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"k\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"down_arrow\",\n              \"modifiers\": [\"left_option\"]\n            }\n          ]\n        },\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"k\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_unless\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"down_arrow\"\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"l\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"right_arrow\",\n              \"modifiers\": [\"left_option\"]\n            }\n          ]\n        },\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"l\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            },\n            {\n              \"type\": \"variable_unless\",\n              \"name\": \"caps_v\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"right_arrow\"\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"delete_or_backspace\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"key_code\": \"delete_or_backspace\",\n              \"modifiers\": [\"left_option\"]\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"spacebar\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"pointing_button\": \"button1\"\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"s\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"mouse_key\": {\n                \"x\": -5\n              }\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"e\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"mouse_key\": {\n                \"y\": -5\n              }\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"d\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"mouse_key\": {\n                \"y\": 5\n              }\n            }\n          ]\n        },\n\n        {\n          \"type\": \"basic\",\n          \"from\": {\n            \"key_code\": \"f\",\n            \"modifiers\": {\n              \"optional\": [\"any\"]\n            }\n          },\n          \"conditions\": [\n            {\n              \"type\": \"variable_if\",\n              \"name\": \"caps_layer\",\n              \"value\": 1\n            }\n          ],\n          \"to\": [\n            {\n              \"mouse_key\": {\n                \"x\": 5\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n";document.getElementById('downloadJson').addEventListener('click',()=>{const blob=new Blob([karabinerJson],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='caps_lock_control_layer_karabiner.json';a.click();URL.revokeObjectURL(a.href)});
+</script></body></html>
