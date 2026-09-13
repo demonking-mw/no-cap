@@ -3,8 +3,12 @@
 `no-cap` is a set of AutoHotkey scripts that turns Caps Lock into a modifier layer so you can map extra keyboard functions to easy key combos.
 
 ## Requirements
-
+Windows:
 - Install [AutoHotkey v2](https://www.autohotkey.com/).
+
+Mac:
+- There's no native script support, whoops.
+- HOWEVER, download the mac tutorial down below, it's pretty straight forward to set it up with Karabiner
 
 ## Quick start
 
